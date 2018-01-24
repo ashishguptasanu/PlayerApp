@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:id="@+id/content_fullscreen"
-    tools:context="live.player.edge.com.playerapp.PlayerActivity">
+    tools:context="live.player.edge.com.playerapp.Activities.PlayerActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
