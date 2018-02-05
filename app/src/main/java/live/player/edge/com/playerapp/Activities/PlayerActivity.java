@@ -57,7 +57,7 @@ public class PlayerActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     CommentAdapter commentAdapter;
     List<Comments> commentsList = new ArrayList<>();
-    private static final String APPLICATION_ID = "CaeKICW1agdVn9C1KIOWsw";
+    private static final String APPLICATION_ID = "";
 
     BroadcastPlayer.Observer mBroadcastPlayerObserver = new BroadcastPlayer.Observer() {
         @Override
@@ -102,14 +102,14 @@ public class PlayerActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        recyclerViewComments = (RecyclerView)findViewById(R.id.recycler_comments);
+        recyclerViewComments = findViewById(R.id.recycler_comments);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerViewComments.setLayoutManager(linearLayoutManager);
         commentAdapter = new CommentAdapter(getApplicationContext(), commentsList);
         recyclerViewComments.setAdapter(commentAdapter);
-        mVideoSurface = (SurfaceView) findViewById(R.id.VideoSurfaceView);
-        mPlayerStatusTextView = (TextView) findViewById(R.id.PlayerStatusTextView);
+        mVideoSurface =  findViewById(R.id.VideoSurfaceView);
+        mPlayerStatusTextView =  findViewById(R.id.PlayerStatusTextView);
         tvLiveStatus = findViewById(R.id.tv_live_status);
         tvLiveStatus.setVisibility(View.GONE);
         if(getIntent().getExtras() !=null && getIntent().getExtras().containsKey("resource_uri")){
@@ -149,7 +149,7 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mVideoSurface = (SurfaceView) findViewById(R.id.VideoSurfaceView);
+        mVideoSurface = findViewById(R.id.VideoSurfaceView);
         mPlayerStatusTextView.setText("Loading latest broadcast");
         if(getIntent().getExtras() !=null && getIntent().getExtras().containsKey("resource_uri")){
             uri = getIntent().getStringExtra("resource_uri");

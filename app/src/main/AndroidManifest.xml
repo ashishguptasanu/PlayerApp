@@ -11,17 +11,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
         <activity
             android:name=".Activities.PlayerActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
-        <activity android:name=".Activities.HomeActivity">
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Activities.HomeActivity"></activity>
+        <activity android:name=".Activities.GettingStarted">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.SignInActivity"
+            android:label="Log In or Sign Up "
+            android:parentActivityName=".Activities.GettingStarted"></activity>
     </application>
 
 </manifest>

@@ -18,6 +18,5 @@ public class Comments {
     public String getCommnets() {
         return commnets;
     }
-
     String username, commnets;
 }

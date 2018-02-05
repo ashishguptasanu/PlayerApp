@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/content_fullscreen1"
+    android:background="@mipmap/get_started"
+    tools:context="live.player.edge.com.playerapp.Activities.GettingStarted">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="60dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:text="Get Started"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:textColor="#fff"
+        android:id="@+id/button_get_started"
+        android:background="@drawable/buttonshape"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40dp"
+        android:textColor="#5f66b3"
+        android:text="By signing up you agree to the"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:textColor="#c5cad7"
+        android:layout_marginBottom="20dp"
+        android:text="Terms of Use, Privacy Policy, and Rules"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
+</FrameLayout>

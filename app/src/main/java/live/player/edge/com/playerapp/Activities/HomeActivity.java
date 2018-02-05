@@ -5,17 +5,17 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.Objects;
-
 import live.player.edge.com.playerapp.R;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -28,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final String API_KEY = "cwnka4f079cro6nfqolllkf36";
     Handler handler;
     Runnable runnable;
-
+    ImageView profileImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,12 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
         handler.postDelayed(runnable, 1000) ;
+
+        profileImage = findViewById(R.id.profile_image);
+        if(getIntent().getExtras() != null){
+            String imageUrl = getIntent().getStringExtra("photo_url");
+            Picasso.with(getApplicationContext()).load(imageUrl).into(profileImage);
+        }
     }
     void getLatestResourceUri() {
         Request request = new Request.Builder()
@@ -73,7 +79,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
                 String body = response.body().string();
-                Log.d("Broadcast Response", body);
                 String resourceUri = null;
                 try {
                     JSONObject json = new JSONObject(body);
