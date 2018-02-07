@@ -1,6 +1,7 @@
 package live.player.edge.com.playerapp.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -23,12 +29,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
     OkHttpClient mOkHttpClient = new OkHttpClient();
-    private static final String API_KEY = "cwnka4f079cro6nfqolllkf36";
+    private static final String API_KEY = "";
     Handler handler;
     Runnable runnable;
-    ImageView profileImage;
+    ImageView profileImage, imageMenus;
+    TextView tvUserName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +62,33 @@ public class HomeActivity extends AppCompatActivity {
         handler.postDelayed(runnable, 1000) ;
 
         profileImage = findViewById(R.id.profile_image);
+        tvUserName = findViewById(R.id.tv_username);
+        imageMenus = findViewById(R.id.image_menus);
+        imageMenus.setOnClickListener(this);
         if(getIntent().getExtras() != null){
             String imageUrl = getIntent().getStringExtra("photo_url");
+            String userName = getIntent().getStringExtra("user_name");
+            tvUserName.setText(userName);
             Picasso.with(getApplicationContext()).load(imageUrl).into(profileImage);
         }
+    }
+    private void showMenu(){
+        PowerMenu powerMenu = new PowerMenu.Builder(getApplicationContext())
+                .addItem(new PowerMenuItem("Profile", false))
+                .addItem(new PowerMenuItem("Add Referral Code", false))
+                .addItem(new PowerMenuItem("Review", false))
+                .addItem(new PowerMenuItem("Logout", false))
+                .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT) // Animation start point (TOP | LEFT)
+                .setMenuRadius(10f)
+                .setMenuShadow(10f)
+                .setTextColor(getApplicationContext().getResources().getColor(R.color.colorAccent))
+                .setSelectedTextColor(Color.WHITE)
+                .setMenuColor(Color.WHITE)
+                .setSelectedMenuColor(getApplicationContext().getResources().getColor(R.color.colorPrimary))
+                .setOnMenuItemClickListener(null)
+                .build();
+        powerMenu.showAsDropDown(imageMenus);
+
     }
     void getLatestResourceUri() {
         Request request = new Request.Builder()
@@ -105,5 +135,13 @@ public class HomeActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.image_menus:
+                showMenu();
+        }
     }
 }

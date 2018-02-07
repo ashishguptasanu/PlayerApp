@@ -1,6 +1,7 @@
 package live.player.edge.com.playerapp.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,9 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.Task;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 
 import java.util.Arrays;
 
@@ -62,6 +66,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -79,7 +84,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 if(acct.getPhotoUrl() != null)
                     intent.putExtra("photo_url", acct.getPhotoUrl().toString());
-                    Log.d("Photo_url",acct.getPhotoUrl().toString());
+                    intent.putExtra("user_name", acct.getDisplayName());
+
+                    Log.d("Photo_url",acct.getDisplayName() + "=" + acct.getGivenName());
                 startActivity(intent);
             }
 
