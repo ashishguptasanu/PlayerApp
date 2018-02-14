@@ -57,7 +57,7 @@ public class PlayerActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     CommentAdapter commentAdapter;
     List<Comments> commentsList = new ArrayList<>();
-    private static final String APPLICATION_ID = "CaeKICW1agdVn9C1KIOWsw";
+    private static final String APPLICATION_ID = "";
 
     BroadcastPlayer.Observer mBroadcastPlayerObserver = new BroadcastPlayer.Observer() {
         @Override

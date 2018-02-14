@@ -10,14 +10,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.skydoves.powermenu.MenuAnimation;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -60,7 +58,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
         handler.postDelayed(runnable, 1000) ;
-
         profileImage = findViewById(R.id.profile_image);
         tvUserName = findViewById(R.id.tv_username);
         imageMenus = findViewById(R.id.image_menus);
@@ -88,7 +85,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .setOnMenuItemClickListener(null)
                 .build();
         powerMenu.showAsDropDown(imageMenus);
-
     }
     void getLatestResourceUri() {
         Request request = new Request.Builder()
