@@ -4,7 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application
+    <application xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:icon"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,21 +22,23 @@
             android:label="@string/app_name" />
         <activity
             android:name=".Activities.PlayerActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" >
+
+        </activity>
         <activity android:name=".Activities.HomeActivity" />
         <activity android:name=".Activities.GettingStarted">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activities.SignInActivity"
             android:label="Log In or Sign Up "
             android:parentActivityName=".Activities.GettingStarted" />
         <activity android:name=".Activities.VideoActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

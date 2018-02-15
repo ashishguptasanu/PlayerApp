@@ -87,4 +87,6 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="facebook_app_id">6545454</string>
+    <string name="base_url">http://mshmsh.tv</string>
+    <string name="token">d75542712c868c1690110db641ba01a</string>
 </resources>

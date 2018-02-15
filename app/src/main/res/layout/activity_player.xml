@@ -4,19 +4,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:timer="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:id="@+id/content_fullscreen"
     tools:context="live.player.edge.com.playerapp.Activities.PlayerActivity">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimary"
+        android:layout_margin="15dp"
+        app:cardCornerRadius="20dp"
+        android:id="@+id/card_question"
+        android:visibility="visible"
+        android:alpha="0"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2"
+                    android:layout_gravity="center"
+                    android:textSize="40sp"
 
-    <FrameLayout
+                    android:layout_marginBottom="20dp"
+                    android:textStyle="bold"
+                    android:id="@+id/tv_tick"
+                    android:textColor="#fff"/>
+                <io.github.krtkush.lineartimer.LinearTimerView
+                    android:id="@+id/linearTimer"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    timer:radius="18dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="center"
+                    timer:strokeWidth="2dp"
+                    timer:initialColor="#fff"
+                    timer:progressColor="@color/colorAccent"/>
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Who was the first prime minister of India?"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:id="@+id/tv_question"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rajiv Gandhi"
+                android:background="@drawable/buttonshape"
+                android:textColor="#fff"
+                android:layout_marginTop="20dp"
+                android:textAllCaps="false"
+                android:textSize="19dp"
+                android:textStyle="bold"
+                android:id="@+id/btn_option1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Jawahar Lal Nehru"
+                android:background="@drawable/buttonshape"
+                android:textColor="#fff"
+                android:layout_marginTop="10dp"
+                android:textAllCaps="false"
+                android:textSize="19dp"
+                android:textStyle="bold"
+                android:id="@+id/btn_option2"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rajendra Prasad"
+                android:background="@drawable/buttonshape"
+                android:textColor="#fff"
+                android:layout_marginTop="10dp"
+                android:textAllCaps="false"
+                android:textSize="19dp"
+                android:textStyle="bold"
+                android:id="@+id/btn_option3"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.bambuser.broadcaster.SurfaceViewWithAutoAR
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:id="@+id/video_view"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"/>
+        <!--<com.bambuser.broadcaster.SurfaceViewWithAutoAR
             android:id="@+id/VideoSurfaceView"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:fitsSystemWindows="true"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true" />!-->
         <TextView android:id="@+id/PlayerStatusTextView"
             android:textColor="@color/colorAccent"
             android:visibility="gone"
@@ -35,14 +129,14 @@
             android:layout_margin="10dp"
             android:background="@drawable/bordered_text"
             android:textSize="18sp"
-            android:layout_gravity="end"
+            android:layout_gravity="right"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
             android:textStyle="bold"
             android:text="● LIVE" />
-    </FrameLayout>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

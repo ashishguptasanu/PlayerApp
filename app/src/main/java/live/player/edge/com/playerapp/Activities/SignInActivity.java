@@ -28,16 +28,27 @@ import com.skydoves.powermenu.MenuAnimation;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import live.player.edge.com.playerapp.R;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final int RC_SIGN_IN = 1;
     private static final String EMAIL = "email";
+    private static final String POST_URL = "/sign_up.php";
     GoogleSignInOptions gso;
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
+    OkHttpClient client = new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +96,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 if(acct.getPhotoUrl() != null)
                     intent.putExtra("photo_url", acct.getPhotoUrl().toString());
                     intent.putExtra("user_name", acct.getDisplayName());
-
                     Log.d("Photo_url",acct.getDisplayName() + "=" + acct.getGivenName());
+                    postSignInData(acct.getId(), acct.getDisplayName(), acct.getEmail(), String.valueOf(acct.getPhotoUrl()));
                 startActivity(intent);
             }
 
@@ -97,5 +108,61 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d("Connection Result:", String.valueOf(connectionResult));
+    }
+    private void postSignInData(String userId, String username, String email, String imageUrl){
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("user_id",userId)
+                .addFormDataPart("user_name",username)
+                .addFormDataPart("user_email",email)
+                .addFormDataPart("img_url",imageUrl)
+                .build();
+        Request request = new Request.Builder().url(getResources().getString(R.string.base_url)+POST_URL).addHeader("Token", getResources().getString(R.string.token)).post(requestBody).build();
+        okhttp3.Call call = client.newCall(request);
+        call.enqueue(new okhttp3.Callback() {
+                         @Override
+                         public void onFailure(okhttp3.Call call, IOException e) {
+                             System.out.println("Registration Error" + e.getMessage());
+                         }
+                         @Override
+                         public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                             String resp = response.body().string();
+                             Log.d("resp",resp);
+
+                             /*if (response.isSuccessful()) {
+                                 JSONObject obj = null;
+                                 try {
+                                     obj = new JSONObject(resp);
+                                     JSONObject obj_response=obj.getJSONObject("Response");
+                                     JSONObject obj_data=obj_response.getJSONObject("data");
+                                     final String msgFinal = obj_data.getString("type");
+                                     if(Objects.equals(msgFinal, "Success")){
+                                         orderId = obj_data.getString("order_id");
+                                         String lastId = obj_data.getString("last_id");
+                                         if(filePaths.size() > 0){
+                                             sendFile(FILE_URL, lastId);
+                                         }
+                                         Intent intent = new Intent(getApplicationContext(), SummaryOnlineConsultation.class);
+                                         intent.putExtra("fee",fee);
+                                         intent.putExtra("mode",modeVideoConsultation.getText().toString());
+                                         sharedPreferences.edit().putInt("visa_id",102).apply();
+                                         sharedPreferences.edit().putString("order_id",orderId).apply();
+                                         intent.putExtra("order_id", orderId);
+                                         startActivity(intent);
+                                     }else{
+                                         runOnUiThread(new Runnable() {
+                                             @Override
+                                             public void run() {
+                                                 showToast("Unsuccessful");
+                                             }
+                                         });
+                                     }
+                                 } catch (JSONException e) {
+                                     e.printStackTrace();
+                                 }
+                             }*/
+                         }
+                     }
+        );
     }
 }

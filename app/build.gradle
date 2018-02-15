@@ -38,6 +38,9 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.github.skydoves:powermenu:2.0.1'
+    compile 'com.github.krtkush:LinearTimer:v2.1.1'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+
 
 }
 apply plugin: 'com.google.gms.google-services'
