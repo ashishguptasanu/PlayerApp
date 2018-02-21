@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -36,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -49,14 +51,18 @@ import io.github.krtkush.lineartimer.LinearTimer;
 import io.github.krtkush.lineartimer.LinearTimerView;
 import live.player.edge.com.playerapp.Adapters.CommentAdapter;
 import live.player.edge.com.playerapp.Models.Comments;
+import live.player.edge.com.playerapp.Models.Questions;
+import live.player.edge.com.playerapp.Models.Status;
 import live.player.edge.com.playerapp.R;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class PlayerActivity extends AppCompatActivity implements LinearTimer.TimerListener {
+public class PlayerActivity extends AppCompatActivity implements LinearTimer.TimerListener, View.OnClickListener {
     SurfaceView mVideoSurface;
     TextView mPlayerStatusTextView;
     BroadcastPlayer mBroadcastPlayer;
@@ -73,10 +79,18 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     VideoView videoView;
     CardView cardQuestion;
     TextView tvQuestion, tvTick;
+    ImageView imageAnswerStatus;
     Button btnOption1, btnOption2, btnOption3;
     LinearTimer linearTimer;
-
-    private static final String APPLICATION_ID = "";
+    OkHttpClient client = new OkHttpClient();
+    List<Questions> questions = new ArrayList<>();
+    DatabaseReference databaseReference;
+    boolean isOptionSelected = false;
+    private static String QUIZ_URL = "/available_quiz.php";
+    private static String POST_ANSWER_URL = "/post_answer.php";
+    private static final String APPLICATION_ID = "CaeKICW1agdVn9C1KIOWsw";
+    String selectedOptionId = " ";
+    LinearTimerView linearTimerView;
 
     BroadcastPlayer.Observer mBroadcastPlayerObserver = new BroadcastPlayer.Observer() {
         @Override
@@ -120,17 +134,19 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         setContentView(R.layout.activity_player);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        getQuiz();
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        videoView = (VideoView)this.findViewById(R.id.video_view);
+        videoView = this.findViewById(R.id.video_view);
         /*MediaController mc = new MediaController(this);
         videoView.setMediaController(mc);*/
 
-        /*videoView.setVideoURI(Uri.parse("rtsp://93.115.28.144:1935/live/myStream"));
+        videoView.setVideoURI(Uri.parse("rtsp://93.115.28.144:1935/live/myStream"));
         Log.d("Buffer", String.valueOf(videoView.getBufferPercentage()));
         videoView.start();
 
-        videoView.requestFocus();*/
+        videoView.requestFocus();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         recyclerViewComments = findViewById(R.id.recycler_comments);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -140,13 +156,20 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         recyclerViewComments.setAdapter(commentAdapter);
         cardQuestion = findViewById(R.id.card_question);
         tvQuestion = findViewById(R.id.tv_question);
-        LinearTimerView linearTimerView = (LinearTimerView)
+        btnOption1 = findViewById(R.id.btn_option1);
+        btnOption2 = findViewById(R.id.btn_option2);
+        btnOption3 = findViewById(R.id.btn_option3);
+        btnOption1.setOnClickListener(this);
+        btnOption2.setOnClickListener(this);
+        btnOption3.setOnClickListener(this);
+        imageAnswerStatus = findViewById(R.id.image_answer_status);
+        linearTimerView = (LinearTimerView)
                 findViewById(R.id.linearTimer);
         tvTick = findViewById(R.id.tv_tick);
         tvTick.setText("10");
         linearTimer = new LinearTimer.Builder()
-                .timerListener(this)
                 .linearTimerView(linearTimerView)
+                .timerListener(this)
                 .duration(10 * 1000)
                 .build();
 
@@ -158,20 +181,14 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
             uri = getIntent().getStringExtra("resource_uri");
         }*/
 
-        animateCard(0,1, 100);
-        linearTimer.startTimer();
+
+
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 Log.d("Prepared", "True");
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
 
-                    }
-                }, 10000);
 
             }
         });
@@ -252,8 +269,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     }
 
     private void getComments() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("comments").child("1");
-        databaseReference.addChildEventListener(new ChildEventListener() {
+
+        databaseReference.child("comments").child("1").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Comments comments = dataSnapshot.getValue(Comments.class);
@@ -336,16 +353,221 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     @Override
     public void animationComplete() {
         animateCard(1, 0, 100);
+        linearTimer.resetTimer();
     }
 
     @Override
     public void timerTick(long tickUpdateInMillis) {
-        tvTick.setText(String.valueOf(tickUpdateInMillis/1000));
+        btnOption1.setOnClickListener(this);
+        btnOption2.setOnClickListener(this);
+        btnOption3.setOnClickListener(this);
+        tvTick.setText(String.valueOf(10 - (tickUpdateInMillis/1000)));
+        Log.d("Tick", String.valueOf(10 - (tickUpdateInMillis/1000)));
     }
 
     @Override
     public void onTimerReset() {
+        btnOption1.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+        btnOption2.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+        btnOption3.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+        isOptionSelected = false;
+    }
+    private void getQuiz() {
+        RequestBody requestBody = new MultipartBody.Builder()
+                .addFormDataPart("test","test")
+                .build();
+        Request request = new Request.Builder().url(getResources().getString(R.string.base_url)+QUIZ_URL).addHeader("Token", getResources().getString(R.string.token)).post(requestBody).build();
+        okhttp3.Call call = client.newCall(request);
+        call.enqueue(new okhttp3.Callback() {
+                         @Override
+                         public void onFailure(okhttp3.Call call, IOException e) {
+                             System.out.println("Registration Error" + e.getMessage());
+                         }
+                         @Override
+                         public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                             String resp = response.body().string();
+                             Log.d("resp",resp);
 
+                             if (response.isSuccessful()) {
+                                 JSONObject obj = null;
+                                 try {
+                                     obj = new JSONObject(resp);
+                                     JSONObject obj_response=obj.getJSONObject("Response");
+                                     JSONObject obj_data=obj_response.getJSONObject("data");
+                                     JSONArray questionArray = obj_data.getJSONArray("QuizQuestions");
+                                     for(int i=0; i<questionArray.length(); i++){
+                                         JSONObject questionObject = questionArray.getJSONObject(i);
+                                         String questionId = questionObject.getString("QuizQuestionId");
+                                         String questionQuiz = questionObject.getString("QuizQuestion");
+                                         String option1 = questionObject.getString("QuestionOptionA");
+                                         String option2 = questionObject.getString("QuestionOptionB");
+                                         String option3 = questionObject.getString("QuestionOptionC");
+                                         Questions question = new Questions(Integer.parseInt(questionId), questionQuiz, option1, option2, option3);
+                                         questions.add(question);}
+                                         Log.d("Size List", String.valueOf(questions.size()));
+                                     postQuestions(questions);
+                                 } catch (JSONException e) {
+                                     e.printStackTrace();
+                                 }
+                             }
+                         }
+                     }
+        );
+    }
+
+    private void postQuestions(final List<Questions> questions) {
+        databaseReference.child("quiz").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("Snapshot", String.valueOf(dataSnapshot) + s);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d("Status", String.valueOf(dataSnapshot) + dataSnapshot.getKey());
+                Status status = dataSnapshot.getValue(Status.class);
+                assert status != null;
+                Log.d("Status",status.question_status + " " + status.question_answer + " " + status.questionId);
+                if(Objects.equals(status.question_status, "1")){
+                    Log.d("Changed", "Question Status");
+                    linearTimerView.setVisibility(View.VISIBLE);
+                    tvTick.setVisibility(View.VISIBLE);
+                    tvTick.setVisibility(View.VISIBLE);
+                    tvQuestion.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getQuestion());
+                    btnOption1.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption1());
+                    btnOption2.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption2());
+                    btnOption3.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption3());
+                    linearTimer.startTimer();
+                    animateCard(0, 1, 1000);
+                }
+                else if(Objects.equals(status.question_status, "2")){
+                    btnOption1.setOnClickListener(null);
+                    btnOption1.setOnClickListener(null);
+                    btnOption1.setOnClickListener(null);
+                    tvQuestion.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getQuestion());
+                    btnOption1.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption1());
+                    btnOption2.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption2());
+                    btnOption3.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption3());
+                    linearTimerView.setVisibility(View.GONE);
+                    tvTick.setVisibility(View.GONE);
+                    Log.d("Selected Answer", String.valueOf(selectedOptionId));
+                    if(Objects.equals(status.question_answer, selectedOptionId)){
+                        imageAnswerStatus.setBackgroundResource(R.mipmap.true_symbol);
+                        if(Objects.equals(selectedOptionId, "1")){
+                            btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                        }else if(Objects.equals(selectedOptionId, "2")){
+                            btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                        }else if(Objects.equals(selectedOptionId, "3")){
+                            btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                        }
+
+                    }else{
+                        imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
+                        if(Objects.equals(selectedOptionId, "1")){
+                            btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                        }else if(Objects.equals(selectedOptionId, "2")){
+                            btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                        }else if(Objects.equals(selectedOptionId, "3")){
+                            btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                        }
+                    }
+                    imageAnswerStatus.setVisibility(View.VISIBLE);
+                    animateCard(0, 1, 1000);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            animateCard(1,0, 100);
+                            btnOption1.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+                            btnOption2.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+                            btnOption3.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+                            isOptionSelected = false;
+                            selectedOptionId = " ";
+                            imageAnswerStatus.setVisibility(View.GONE);
+                        }
+                    }, 5000);
+                }
+
+
+
+                //Log.d("Snapshot", String.valueOf(dataSnapshot) + dataSnapshot.child("question_status").getValue());
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_option1:
+                if(!isOptionSelected){
+                    btnOption1.setBackground(getResources().getDrawable(R.drawable.button_selected));
+                    isOptionSelected = true;
+                    sendSelectedAnswer("1");
+                }
+                break;
+            case R.id.btn_option2:
+                if(!isOptionSelected){
+                    btnOption2.setBackground(getResources().getDrawable(R.drawable.button_selected));
+                    isOptionSelected = true;
+                    sendSelectedAnswer("2");
+                }
+                break;
+            case R.id.btn_option3:
+                if(!isOptionSelected){
+                    btnOption3.setBackground(getResources().getDrawable(R.drawable.button_selected));
+                    isOptionSelected = true;
+                    sendSelectedAnswer("3");
+                }
+                break;
+        }
+    }
+
+    private void sendSelectedAnswer(String optionId) {
+        selectedOptionId = optionId;
+        RequestBody requestBody = new MultipartBody.Builder()
+                .addFormDataPart("test","test")
+                .build();
+        Request request = new Request.Builder().url(getResources().getString(R.string.base_url)+POST_ANSWER_URL).addHeader("Token", getResources().getString(R.string.token)).post(requestBody).build();
+        okhttp3.Call call = client.newCall(request);
+        call.enqueue(new okhttp3.Callback() {
+                         @Override
+                         public void onFailure(okhttp3.Call call, IOException e) {
+                             System.out.println("Registration Error" + e.getMessage());
+                         }
+                         @Override
+                         public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                             String resp = response.body().string();
+                             Log.d("resp",resp);
+                            /* if (response.isSuccessful()) {
+                                 JSONObject obj = null;
+                                 try {
+                                     obj = new JSONObject(resp);
+                                     JSONObject obj_response=obj.getJSONObject("Response");
+                                     JSONObject obj_data=obj_response.getJSONObject("data");
+
+                                 } catch (JSONException e) {
+                                     e.printStackTrace();
+                                 }
+                             }*/
+                         }
+                     }
+        );
     }
 }
 

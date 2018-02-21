@@ -38,6 +38,12 @@
                     android:textStyle="bold"
                     android:id="@+id/tv_tick"
                     android:textColor="#fff"/>
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:id="@+id/image_answer_status"/>
                 <io.github.krtkush.lineartimer.LinearTimerView
                     android:id="@+id/linearTimer"
                     android:layout_width="55dp"
@@ -109,8 +115,8 @@
             android:id="@+id/VideoSurfaceView"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:fitsSystemWindows="true"
-            android:layout_centerInParent="true" />!-->
+            android:fitsSystemWindotrue_symboltrue"
+            android:layout_centerInParetrue_symboltrue" />!-->
         <TextView android:id="@+id/PlayerStatusTextView"
             android:textColor="@color/colorAccent"
             android:visibility="gone"

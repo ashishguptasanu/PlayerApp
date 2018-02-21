@@ -23,9 +23,10 @@
         <activity
             android:name=".Activities.PlayerActivity"
             android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity android:name=".Activities.HomeActivity">
 
         </activity>
-        <activity android:name=".Activities.HomeActivity" />
         <activity android:name=".Activities.GettingStarted">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,7 +1,9 @@
 package live.player.edge.com.playerapp.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,12 +50,14 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     GoogleSignInOptions gso;
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
+    SharedPreferences sharedPreferences;
     OkHttpClient client = new OkHttpClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_signin);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -90,6 +94,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             if (result.isSuccess()) {
                 // Signed in successfolly, show authenticated UI.
                 GoogleSignInAccount acct = result.getSignInAccount();
+                sharedPreferences.edit().putString("display_name",acct.getDisplayName()).apply();
+                sharedPreferences.edit().putString("photo_url", acct.getPhotoUrl().toString()).apply();
+                sharedPreferences.edit().putInt("login_status", 1).apply();
                 /*mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));*/
                 //Similarly you can get the email and photourl using acct.getEmail() and  acct.getPhotoUrl()
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);

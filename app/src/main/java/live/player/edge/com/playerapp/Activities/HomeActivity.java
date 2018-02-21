@@ -1,17 +1,26 @@
 package live.player.edge.com.playerapp.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.skydoves.powermenu.MenuAnimation;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
@@ -23,8 +32,10 @@ import java.util.Objects;
 import live.player.edge.com.playerapp.R;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
@@ -34,10 +45,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     Runnable runnable;
     ImageView profileImage, imageMenus;
     TextView tvUserName;
+    Button btnWatchLive;
+    SharedPreferences sharedPreferences;
+    private DatabaseReference mDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_home);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         View mContentView = findViewById(R.id.content_fullscreen);
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -49,6 +66,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
+        btnWatchLive = findViewById(R.id.btn_watch_live);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("quiz_status").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("Snapshot:", String.valueOf(dataSnapshot.getValue()));
+                if(Objects.equals(dataSnapshot.getValue(), String.valueOf(1))){
+                    btnWatchLive.setVisibility(View.VISIBLE);
+                }else btnWatchLive.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         handler = new Handler();
         runnable = new Runnable() {
             @Override
@@ -62,12 +95,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tvUserName = findViewById(R.id.tv_username);
         imageMenus = findViewById(R.id.image_menus);
         imageMenus.setOnClickListener(this);
-        if(getIntent().getExtras() != null){
-            String imageUrl = getIntent().getStringExtra("photo_url");
-            String userName = getIntent().getStringExtra("user_name");
+
+        btnWatchLive.setOnClickListener(this);
+
+            String userName = sharedPreferences.getString("display_name","");
+            String imageUrl = sharedPreferences.getString("photo_url","");
             tvUserName.setText(userName);
             Picasso.with(getApplicationContext()).load(imageUrl).into(profileImage);
-        }
+
     }
     private void showMenu(){
         PowerMenu powerMenu = new PowerMenu.Builder(getApplicationContext())
@@ -138,6 +173,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.image_menus:
                 showMenu();
+                break;
+            case R.id.btn_watch_live:
+                Intent intent = new Intent(this, PlayerActivity.class);
+                startActivity(intent);
+                break;
         }
     }
+
+
 }
