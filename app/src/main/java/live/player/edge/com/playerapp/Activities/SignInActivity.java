@@ -97,6 +97,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 sharedPreferences.edit().putString("display_name",acct.getDisplayName()).apply();
                 sharedPreferences.edit().putString("photo_url", acct.getPhotoUrl().toString()).apply();
                 sharedPreferences.edit().putInt("login_status", 1).apply();
+                sharedPreferences.edit().putString("user_id",acct.getId()).apply();
                 /*mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));*/
                 //Similarly you can get the email and photourl using acct.getEmail() and  acct.getPhotoUrl()
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);

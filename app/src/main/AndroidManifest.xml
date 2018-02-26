@@ -22,7 +22,8 @@
             android:label="@string/app_name" />
         <activity
             android:name=".Activities.PlayerActivity"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.custom">
         </activity>
         <activity android:name=".Activities.HomeActivity">
 

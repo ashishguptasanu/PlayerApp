@@ -3,11 +3,13 @@ package live.player.edge.com.playerapp.Activities;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -54,21 +56,16 @@ import live.player.edge.com.playerapp.Models.Comments;
 import live.player.edge.com.playerapp.Models.Questions;
 import live.player.edge.com.playerapp.Models.Status;
 import live.player.edge.com.playerapp.R;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class PlayerActivity extends AppCompatActivity implements LinearTimer.TimerListener, View.OnClickListener {
     SurfaceView mVideoSurface;
     TextView mPlayerStatusTextView;
     BroadcastPlayer mBroadcastPlayer;
     MediaController mMediaController = null;
-    OkHttpClient mOkHttpClient = new OkHttpClient();
-    String uri;
     TextView tvLiveStatus;
     EditText edtComment;
     DatabaseReference mDatabase;
@@ -78,20 +75,21 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     List<Comments> commentsList = new ArrayList<>();
     VideoView videoView;
     CardView cardQuestion;
-    TextView tvQuestion, tvTick;
+    TextView tvQuestion, tvTick, tvEliminated;
     ImageView imageAnswerStatus;
     Button btnOption1, btnOption2, btnOption3;
     LinearTimer linearTimer;
     OkHttpClient client = new OkHttpClient();
     List<Questions> questions = new ArrayList<>();
     DatabaseReference databaseReference;
-    boolean isOptionSelected = false;
+    boolean isOptionSelected = false, isElemenated = false;
     private static String QUIZ_URL = "/available_quiz.php";
-    private static String POST_ANSWER_URL = "/post_answer.php";
+    private static String POST_ANSWER_URL = "/leader_board.php";
     private static final String APPLICATION_ID = "CaeKICW1agdVn9C1KIOWsw";
     String selectedOptionId = " ";
     LinearTimerView linearTimerView;
-
+    SharedPreferences sharedPreferences;
+    int selectedQuestionId, quizId;
     BroadcastPlayer.Observer mBroadcastPlayerObserver = new BroadcastPlayer.Observer() {
         @Override
         public void onStateChange(PlayerState playerState) {
@@ -162,6 +160,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         btnOption1.setOnClickListener(this);
         btnOption2.setOnClickListener(this);
         btnOption3.setOnClickListener(this);
+        tvEliminated = findViewById(R.id.tv_eliminated);
         imageAnswerStatus = findViewById(R.id.image_answer_status);
         linearTimerView = (LinearTimerView)
                 findViewById(R.id.linearTimer);
@@ -172,7 +171,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 .timerListener(this)
                 .duration(10 * 1000)
                 .build();
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         /*mVideoSurface =  findViewById(R.id.VideoSurfaceView);
         mPlayerStatusTextView =  findViewById(R.id.PlayerStatusTextView);*/
         tvLiveStatus = findViewById(R.id.tv_live_status);
@@ -303,7 +302,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
 
     private void initializeComments() {
         edtComment = findViewById(R.id.edt_comment);
-
         edtComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -386,7 +384,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                          @Override
                          public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                              String resp = response.body().string();
-                             Log.d("resp",resp);
+                             //Log.d("resp",resp);
 
                              if (response.isSuccessful()) {
                                  JSONObject obj = null;
@@ -394,6 +392,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                                      obj = new JSONObject(resp);
                                      JSONObject obj_response=obj.getJSONObject("Response");
                                      JSONObject obj_data=obj_response.getJSONObject("data");
+                                     quizId = obj_data.getInt("QuizId");
+                                     //Log.d("QUIZID", String.valueOf(quizId));
                                      JSONArray questionArray = obj_data.getJSONArray("QuizQuestions");
                                      for(int i=0; i<questionArray.length(); i++){
                                          JSONObject questionObject = questionArray.getJSONObject(i);
@@ -404,7 +404,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                                          String option3 = questionObject.getString("QuestionOptionC");
                                          Questions question = new Questions(Integer.parseInt(questionId), questionQuiz, option1, option2, option3);
                                          questions.add(question);}
-                                         Log.d("Size List", String.valueOf(questions.size()));
+                                         //Log.d("Size List", String.valueOf(questions.size()));
                                      postQuestions(questions);
                                  } catch (JSONException e) {
                                      e.printStackTrace();
@@ -429,7 +429,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 assert status != null;
                 Log.d("Status",status.question_status + " " + status.question_answer + " " + status.questionId);
                 if(Objects.equals(status.question_status, "1")){
-                    Log.d("Changed", "Question Status");
+                    selectedQuestionId = Integer.parseInt(status.questionId);
+                    //Log.d("Changed", "Question Status");
                     linearTimerView.setVisibility(View.VISIBLE);
                     tvTick.setVisibility(View.VISIBLE);
                     tvTick.setVisibility(View.VISIBLE);
@@ -442,15 +443,26 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 }
                 else if(Objects.equals(status.question_status, "2")){
                     btnOption1.setOnClickListener(null);
-                    btnOption1.setOnClickListener(null);
-                    btnOption1.setOnClickListener(null);
+                    btnOption2.setOnClickListener(null);
+                    btnOption3.setOnClickListener(null);
                     tvQuestion.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getQuestion());
                     btnOption1.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption1());
                     btnOption2.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption2());
                     btnOption3.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption3());
                     linearTimerView.setVisibility(View.GONE);
                     tvTick.setVisibility(View.GONE);
-                    Log.d("Selected Answer", String.valueOf(selectedOptionId));
+                    //Log.d("Selected Answer", String.valueOf(selectedOptionId));
+                    if(isElemenated){
+                        imageAnswerStatus.setVisibility(View.GONE);
+                        tvEliminated.setVisibility(View.VISIBLE);
+                        if(Objects.equals(status.question_answer, "2")){
+                            btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                        }else if(Objects.equals(status.question_answer, "3")){
+                            btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                        }else if(Objects.equals(status.question_answer, "1")){
+                            btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                        }
+                    }
                     if(Objects.equals(status.question_answer, selectedOptionId)){
                         imageAnswerStatus.setBackgroundResource(R.mipmap.true_symbol);
                         if(Objects.equals(selectedOptionId, "1")){
@@ -462,13 +474,31 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                         }
 
                     }else{
-                        imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
+                        isElemenated = true;
                         if(Objects.equals(selectedOptionId, "1")){
+                            imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
                             btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                            if(Objects.equals(status.question_answer, "2")){
+                                btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                            }else if(Objects.equals(status.question_answer, "3")){
+                                btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                            }
                         }else if(Objects.equals(selectedOptionId, "2")){
+                            imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
                             btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                            if(Objects.equals(status.question_answer, "1")){
+                                btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                            }else if(Objects.equals(status.question_answer, "3")){
+                                btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                            }
                         }else if(Objects.equals(selectedOptionId, "3")){
+                            imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
                             btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                            if(Objects.equals(status.question_answer, "1")){
+                                btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                            }else if(Objects.equals(status.question_answer, "2")){
+                                btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                            }
                         }
                     }
                     imageAnswerStatus.setVisibility(View.VISIBLE);
@@ -484,29 +514,22 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                             isOptionSelected = false;
                             selectedOptionId = " ";
                             imageAnswerStatus.setVisibility(View.GONE);
+                            tvEliminated.setVisibility(View.GONE);
                         }
                     }, 5000);
                 }
-
-
-
-                //Log.d("Snapshot", String.valueOf(dataSnapshot) + dataSnapshot.child("question_status").getValue());
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
@@ -515,25 +538,28 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_option1:
-                if(!isOptionSelected){
-                    btnOption1.setBackground(getResources().getDrawable(R.drawable.button_selected));
-                    isOptionSelected = true;
-                    sendSelectedAnswer("1");
-                }
+                if(!isElemenated){
+                    if(!isOptionSelected){
+                        btnOption1.setBackground(getResources().getDrawable(R.drawable.button_selected));
+                        isOptionSelected = true;
+                        sendSelectedAnswer("1");
+                    }}
                 break;
             case R.id.btn_option2:
-                if(!isOptionSelected){
-                    btnOption2.setBackground(getResources().getDrawable(R.drawable.button_selected));
-                    isOptionSelected = true;
-                    sendSelectedAnswer("2");
-                }
+                if(!isElemenated){
+                    if(!isOptionSelected){
+                        btnOption2.setBackground(getResources().getDrawable(R.drawable.button_selected));
+                        isOptionSelected = true;
+                        sendSelectedAnswer("2");
+                    }}
                 break;
             case R.id.btn_option3:
-                if(!isOptionSelected){
-                    btnOption3.setBackground(getResources().getDrawable(R.drawable.button_selected));
-                    isOptionSelected = true;
-                    sendSelectedAnswer("3");
-                }
+                if(!isElemenated){
+                    if(!isOptionSelected){
+                        btnOption3.setBackground(getResources().getDrawable(R.drawable.button_selected));
+                        isOptionSelected = true;
+                        sendSelectedAnswer("3");
+                    }}
                 break;
         }
     }
@@ -541,10 +567,15 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     private void sendSelectedAnswer(String optionId) {
         selectedOptionId = optionId;
         RequestBody requestBody = new MultipartBody.Builder()
-                .addFormDataPart("test","test")
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("quiz_id", String.valueOf(quizId))
+                .addFormDataPart("user_id",sharedPreferences.getString("user_id", ""))
+                .addFormDataPart("question_id", String.valueOf(selectedQuestionId))
+                .addFormDataPart("user_answer",selectedOptionId)
                 .build();
         Request request = new Request.Builder().url(getResources().getString(R.string.base_url)+POST_ANSWER_URL).addHeader("Token", getResources().getString(R.string.token)).post(requestBody).build();
         okhttp3.Call call = client.newCall(request);
+        Log.d("Params:", quizId + "=" + sharedPreferences.getString("user_id", "") + "=" + selectedQuestionId + "=" + selectedOptionId);
         call.enqueue(new okhttp3.Callback() {
                          @Override
                          public void onFailure(okhttp3.Call call, IOException e) {
