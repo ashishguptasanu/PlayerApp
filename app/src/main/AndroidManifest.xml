@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="live.player.edge.com.playerapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application xmlns:tools="http://schemas.android.com/tools"
-        tools:replace="android:icon"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -22,12 +23,9 @@
             android:label="@string/app_name" />
         <activity
             android:name=".Activities.PlayerActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.custom">
-        </activity>
-        <activity android:name=".Activities.HomeActivity">
-
-        </activity>
+            android:theme="@style/AppTheme.custom"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity android:name=".Activities.HomeActivity"></activity>
         <activity android:name=".Activities.GettingStarted">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,9 +37,10 @@
             android:name=".Activities.SignInActivity"
             android:label="Log In or Sign Up "
             android:parentActivityName=".Activities.GettingStarted" />
-        <activity android:name=".Activities.VideoActivity">
-
-        </activity>
+        <activity android:name=".Activities.VideoActivity"></activity>
+        <activity android:name=".Activities.QuizResults"
+            android:parentActivityName=".Activities.HomeActivity"
+            android:label="Winners"></activity>
     </application>
 
 </manifest>

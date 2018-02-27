@@ -1,5 +1,8 @@
 package live.player.edge.com.playerapp.Activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -22,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.OnMenuItemClickListener;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 import com.squareup.picasso.Picasso;
@@ -38,7 +42,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     OkHttpClient mOkHttpClient = new OkHttpClient();
     private static final String API_KEY = "";
     Handler handler;
@@ -114,10 +118,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .setMenuRadius(10f)
                 .setMenuShadow(10f)
                 .setTextColor(getApplicationContext().getResources().getColor(R.color.colorAccent))
-                .setSelectedTextColor(Color.WHITE)
+                .setSelectedTextColor(getApplicationContext().getResources().getColor(R.color.colorPrimary))
                 .setMenuColor(Color.WHITE)
+                .setSelectedEffect(true)
                 .setSelectedMenuColor(getApplicationContext().getResources().getColor(R.color.colorPrimary))
-                .setOnMenuItemClickListener(null)
+                .setOnMenuItemClickListener(onMenuItemClickListener)
                 .build();
         powerMenu.showAsDropDown(imageMenus);
     }
@@ -182,4 +187,30 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    private  OnMenuItemClickListener<PowerMenuItem> onMenuItemClickListener = new OnMenuItemClickListener<PowerMenuItem>() {
+        @Override
+        public void onItemClick(int position, PowerMenuItem item) {
+            Log.d("Position", String.valueOf(position) + item.getTitle());
+            if (Objects.equals(String.valueOf(position), "3")) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
+                alertDialog.setMessage("Are you sure you want to logout?");
+                alertDialog.setTitle("Logout");
+                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        sharedPreferences.edit().clear().apply();
+                        Intent intent = new Intent(getApplicationContext(), GettingStarted.class);
+                        startActivity(intent);
+                    }
+                });
+
+            }
+        }
+    };
 }

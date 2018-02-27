@@ -3,6 +3,7 @@ package live.player.edge.com.playerapp.Activities;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
@@ -28,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bambuser.broadcaster.BroadcastPlayer;
@@ -37,6 +39,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -162,10 +165,24 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         btnOption3.setOnClickListener(this);
         tvEliminated = findViewById(R.id.tv_eliminated);
         imageAnswerStatus = findViewById(R.id.image_answer_status);
-        linearTimerView = (LinearTimerView)
-                findViewById(R.id.linearTimer);
+        linearTimerView = findViewById(R.id.linearTimer);
         tvTick = findViewById(R.id.tv_tick);
         tvTick.setText("10");
+        mDatabase.child("quiz_status").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(Objects.equals(dataSnapshot.getValue(), String.valueOf(2))){
+                    Toast.makeText(getApplicationContext(),"QUIZ ENDED", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), QuizResults.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         linearTimer = new LinearTimer.Builder()
                 .linearTimerView(linearTimerView)
                 .timerListener(this)
@@ -309,7 +326,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     Log.d("Clicked", "2");
                     if (edtComment.getText().toString().length() > 0) {
-                        sendCommentToFirebase("Nitin", edtComment.getText().toString());
+                        sendCommentToFirebase(sharedPreferences.getString("display_name",""), edtComment.getText().toString());
 
 
                     }
@@ -393,6 +410,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                                      JSONObject obj_response=obj.getJSONObject("Response");
                                      JSONObject obj_data=obj_response.getJSONObject("data");
                                      quizId = obj_data.getInt("QuizId");
+                                     sharedPreferences.edit().putString("quiz_id", String.valueOf(quizId)).apply();
                                      //Log.d("QUIZID", String.valueOf(quizId));
                                      JSONArray questionArray = obj_data.getJSONArray("QuizQuestions");
                                      for(int i=0; i<questionArray.length(); i++){

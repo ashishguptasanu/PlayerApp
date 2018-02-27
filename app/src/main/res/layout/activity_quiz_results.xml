@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/signin_mshmsh"
+    tools:context="live.player.edge.com.playerapp.Activities.QuizResults">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_winners"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:requiresFadingEdge="vertical">
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
