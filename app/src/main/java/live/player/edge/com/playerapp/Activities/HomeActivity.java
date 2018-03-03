@@ -1,7 +1,6 @@
 package live.player.edge.com.playerapp.Activities;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +28,7 @@ import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Objects;
@@ -48,17 +47,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     Handler handler;
     Runnable runnable;
     ImageView profileImage, imageMenus;
-    TextView tvUserName;
+    TextView tvUserName, tvQuizDate, tvQuizPrize;
     Button btnWatchLive;
     SharedPreferences sharedPreferences;
     private DatabaseReference mDatabase;
+    OkHttpClient client = new OkHttpClient();
+    private static String HOME_API = "/home_api.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_home);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        tvQuizDate = findViewById(R.id.tv_quiz_date);
+        tvQuizPrize = findViewById(R.id.tv_quiz_prize);
+        getUserDetails();
+
         View mContentView = findViewById(R.id.content_fullscreen);
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -80,17 +83,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     btnWatchLive.setVisibility(View.VISIBLE);
                 }else btnWatchLive.setVisibility(View.GONE);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
         handler = new Handler();
         runnable = new Runnable() {
             @Override
             public void run() {
-                getLatestResourceUri();
+                //getLatestResourceUri();
                 handler.postDelayed(this, 10000);
             }
         };
@@ -99,14 +100,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tvUserName = findViewById(R.id.tv_username);
         imageMenus = findViewById(R.id.image_menus);
         imageMenus.setOnClickListener(this);
-
         btnWatchLive.setOnClickListener(this);
-
-            String userName = sharedPreferences.getString("display_name","");
-            String imageUrl = sharedPreferences.getString("photo_url","");
-            tvUserName.setText(userName);
-            Picasso.with(getApplicationContext()).load(imageUrl).into(profileImage);
-
+        String userName = sharedPreferences.getString("display_name","");
+        String imageUrl = sharedPreferences.getString("photo_url","");
+        tvUserName.setText(userName);
+        Picasso.with(getApplicationContext()).load(imageUrl).into(profileImage);
     }
     private void showMenu(){
         PowerMenu powerMenu = new PowerMenu.Builder(getApplicationContext())
@@ -137,10 +135,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, final IOException e) {
-                /*runOnUiThread(new Runnable() { @Override public void run() {
-                    if (mPlayerStatusTextView != null)
-                        mPlayerStatusTextView.setText("Http exception: " + e);
-                }});*/
             }
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
@@ -185,8 +179,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-
     private  OnMenuItemClickListener<PowerMenuItem> onMenuItemClickListener = new OnMenuItemClickListener<PowerMenuItem>() {
         @Override
         public void onItemClick(int position, PowerMenuItem item) {
@@ -209,8 +201,46 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         startActivity(intent);
                     }
                 });
-
             }
         }
     };
+    private void getUserDetails() {
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("user_id",sharedPreferences.getString("user_id",""))
+                .build();
+        Request request = new Request.Builder().url(getResources().getString(R.string.base_url)+HOME_API).addHeader("Token", getResources().getString(R.string.token)).post(requestBody).build();
+        okhttp3.Call call = client.newCall(request);
+        call.enqueue(new okhttp3.Callback() {
+                         @Override
+                         public void onFailure(okhttp3.Call call, IOException e) {
+                             System.out.println("Registration Error" + e.getMessage());
+                         }
+                         @Override
+                         public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                             String resp = response.body().string();
+                             Log.d("resp", resp);
+                             if (response.isSuccessful()) {
+                                 JSONObject obj = null;
+                                 try {
+                                     obj = new JSONObject(resp);
+                                     JSONObject obj_response = obj.getJSONObject("response");
+                                     JSONObject obj_data = obj_response.getJSONObject("data");
+                                     final String quizDate = obj_data.getString("quiz_launch_date");
+                                     final String quizTime = obj_data.getString("quiz_prize");
+                                     runOnUiThread(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             tvQuizDate.setText(quizDate);
+                                             tvQuizPrize.setText(quizTime);
+                                         }
+                                     });
+                                 } catch(JSONException e){
+                                     e.printStackTrace();
+                                 }
+                             }
+                         }
+                     }
+        );
+    }
 }

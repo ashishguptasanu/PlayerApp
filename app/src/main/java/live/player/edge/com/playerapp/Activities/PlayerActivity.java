@@ -92,38 +92,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     String selectedOptionId = " ";
     LinearTimerView linearTimerView;
     SharedPreferences sharedPreferences;
-    int selectedQuestionId, quizId;
-    BroadcastPlayer.Observer mBroadcastPlayerObserver = new BroadcastPlayer.Observer() {
-        @Override
-        public void onStateChange(PlayerState playerState) {
-            if (mPlayerStatusTextView != null)
-                mPlayerStatusTextView.setText("Status: " + playerState);
-            if(Objects.equals(playerState.name(), "COMPLETED")){
-                tvLiveStatus.setVisibility(View.GONE);
-            }
-            if (playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED || playerState == PlayerState.COMPLETED) {
-                if (mMediaController == null && mBroadcastPlayer != null && !mBroadcastPlayer.isTypeLive()) {
-                    mMediaController = new MediaController(PlayerActivity.this);
-                    mMediaController.setAnchorView(mVideoSurface);
-                    mMediaController.setMediaPlayer(mBroadcastPlayer);
-                }
-                if (mMediaController != null) {
-                    mMediaController.setEnabled(true);
-                    mMediaController.show();
-                }
-            } else if (playerState == PlayerState.ERROR || playerState == PlayerState.CLOSED) {
-                if (mMediaController != null) {
-                    mMediaController.setEnabled(false);
-                    mMediaController.hide();
-                }
-                mMediaController = null;
-            }
+    int selectedQuestionId, quizId, initQuestionId=0;
 
-        }
-        @Override
-        public void onBroadcastLoaded(boolean live, int width, int height) {
-        }
-    };
     @SuppressLint({"ResourceType", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +147,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                     startActivity(intent);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -211,6 +180,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         /*Timer timer = new Timer();
         TimerTask timerTask;
         timerTask = new TimerTask() {
+
             @Override
             public void run() {
                 animateCard();
@@ -224,65 +194,19 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     @Override
     protected void onPause() {
         super.onPause();
-        /*mOkHttpClient.dispatcher().cancelAll();
-        mVideoSurface = null;
-        if (mBroadcastPlayer != null)
-            mBroadcastPlayer.close();
-        mBroadcastPlayer = null;
-        if (mMediaController != null)
-            mMediaController.hide();
-        mMediaController = null;*/
+
     }
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        /*if (ev.getActionMasked() == MotionEvent.ACTION_UP && mBroadcastPlayer != null && mMediaController != null) {
-            PlayerState state = mBroadcastPlayer.getState();
-            if (state == PlayerState.PLAYING ||
-                    state == PlayerState.BUFFERING ||
-                    state == PlayerState.PAUSED ||
-                    state == PlayerState.COMPLETED) {
-                if (mMediaController.isShowing())
-                    mMediaController.hide();
-                else
-                    mMediaController.show();
-            } else {
-                mMediaController.hide();
-            }
-        }*/
+
         return false;
     }
     @Override
     protected void onResume() {
         super.onResume();
-        /*mVideoSurface = findViewById(R.id.VideoSurfaceView);
-        mPlayerStatusTextView.setText("Loading latest broadcast");
-        if(getIntent().getExtras() !=null && getIntent().getExtras().containsKey("resource_uri")){
-            uri = getIntent().getStringExtra("resource_uri");
-        }
-        initPlayer(uri);
-        //*/
-    }
-    void initPlayer(String resourceUri) {
-        /*animateLiveStatus();
-        getComments();
-        initializeComments();
-        if (resourceUri == null) {
-            if (mPlayerStatusTextView != null)
-                mPlayerStatusTextView.setText("Could not get info about latest broadcast");
-            return;
-        }
-        if (mVideoSurface == null) {
-            // UI no longer active
-            return;
-        }
-        if (mBroadcastPlayer != null)
-            mBroadcastPlayer.close();
-        mBroadcastPlayer = new BroadcastPlayer(this, resourceUri, APPLICATION_ID, mBroadcastPlayerObserver);
-        mBroadcastPlayer.setSurfaceView(mVideoSurface);
-        mBroadcastPlayer.load();*/
-
 
     }
+
 
     private void getComments() {
 
@@ -445,7 +369,9 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 Log.d("Status", String.valueOf(dataSnapshot) + dataSnapshot.getKey());
                 Status status = dataSnapshot.getValue(Status.class);
                 assert status != null;
+
                 Log.d("Status",status.question_status + " " + status.question_answer + " " + status.questionId);
+                if(initQuestionId < 2)
                 if(Objects.equals(status.question_status, "1")){
                     selectedQuestionId = Integer.parseInt(status.questionId);
                     //Log.d("Changed", "Question Status");
@@ -593,7 +519,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 .build();
         Request request = new Request.Builder().url(getResources().getString(R.string.base_url)+POST_ANSWER_URL).addHeader("Token", getResources().getString(R.string.token)).post(requestBody).build();
         okhttp3.Call call = client.newCall(request);
-        Log.d("Params:", quizId + "=" + sharedPreferences.getString("user_id", "") + "=" + selectedQuestionId + "=" + selectedOptionId);
         call.enqueue(new okhttp3.Callback() {
                          @Override
                          public void onFailure(okhttp3.Call call, IOException e) {

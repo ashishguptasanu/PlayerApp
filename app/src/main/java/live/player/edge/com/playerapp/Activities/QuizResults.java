@@ -97,10 +97,6 @@ public class QuizResults extends AppCompatActivity {
 
                          }
                      }
-
-
-
-
         );
     }
 
