@@ -61,7 +61,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tvQuizDate = findViewById(R.id.tv_quiz_date);
         tvQuizPrize = findViewById(R.id.tv_quiz_prize);
         getUserDetails();
-
         View mContentView = findViewById(R.id.content_fullscreen);
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -78,7 +77,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mDatabase.child("quiz_status").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("Snapshot:", String.valueOf(dataSnapshot.getValue()));
                 if(Objects.equals(dataSnapshot.getValue(), String.valueOf(1))){
                     btnWatchLive.setVisibility(View.VISIBLE);
                 }else btnWatchLive.setVisibility(View.GONE);
@@ -112,7 +110,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .addItem(new PowerMenuItem("Add Referral Code", false))
                 .addItem(new PowerMenuItem("Review", false))
                 .addItem(new PowerMenuItem("Logout", false))
-                .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT) // Animation start point (TOP | LEFT)
+                .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT)
                 .setMenuRadius(10f)
                 .setMenuShadow(10f)
                 .setTextColor(getApplicationContext().getResources().getColor(R.color.colorAccent))
@@ -182,7 +180,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private  OnMenuItemClickListener<PowerMenuItem> onMenuItemClickListener = new OnMenuItemClickListener<PowerMenuItem>() {
         @Override
         public void onItemClick(int position, PowerMenuItem item) {
-            Log.d("Position", String.valueOf(position) + item.getTitle());
             if (Objects.equals(String.valueOf(position), "3")) {
                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
                 alertDialog.setMessage("Are you sure you want to logout?");
