@@ -31,27 +31,20 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
 import com.bambuser.broadcaster.BroadcastPlayer;
-import com.bambuser.broadcaster.PlayerState;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import io.github.krtkush.lineartimer.LinearTimer;
 import io.github.krtkush.lineartimer.LinearTimerView;
 import live.player.edge.com.playerapp.Adapters.CommentAdapter;
@@ -112,7 +105,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         videoView = this.findViewById(R.id.video_view);
         /*MediaController mc = new MediaController(this);
         videoView.setMediaController(mc);*/
-
+        //rtsp://93.115.28.144:1935/live/myStream
+        //rtmp://rtmp.streamaxia.com/streamaxia/ef6a64c7cf098e0cTJfAWYfbiLQXPgyK14U3tcmTw9I3
         videoView.setVideoURI(Uri.parse("rtsp://93.115.28.144:1935/live/myStream"));
         Log.d("Buffer", String.valueOf(videoView.getBufferPercentage()));
         videoView.start();
@@ -246,9 +240,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         edtComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                Log.d("Clicked", "1");
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    Log.d("Clicked", "2");
                     if (edtComment.getText().toString().length() > 0) {
                         sendCommentToFirebase(sharedPreferences.getString("display_name",""), edtComment.getText().toString());
 
@@ -419,6 +411,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
 
                     }else{
                         isElemenated = true;
+                        tvEliminated.setVisibility(View.VISIBLE);
                         if(Objects.equals(selectedOptionId, "1")){
                             imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
                             btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_false));
@@ -488,6 +481,9 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                         isOptionSelected = true;
                         sendSelectedAnswer("1");
                     }}
+                    else{
+                    tvEliminated.setVisibility(View.VISIBLE);
+                }
                 break;
             case R.id.btn_option2:
                 if(!isElemenated){
@@ -496,6 +492,9 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                         isOptionSelected = true;
                         sendSelectedAnswer("2");
                     }}
+                else{
+                    tvEliminated.setVisibility(View.VISIBLE);
+                }
                 break;
             case R.id.btn_option3:
                 if(!isElemenated){
@@ -504,6 +503,9 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                         isOptionSelected = true;
                         sendSelectedAnswer("3");
                     }}
+                else{
+                    tvEliminated.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }

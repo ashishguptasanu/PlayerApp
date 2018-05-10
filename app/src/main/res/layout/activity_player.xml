@@ -44,16 +44,7 @@
                     android:layout_gravity="center"
                     android:visibility="gone"
                     android:id="@+id/image_answer_status"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Eliminated"
-                    android:layout_marginTop="30dp"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="30sp"
-                    android:id="@+id/tv_eliminated"
-                    android:visibility="gone"
-                    android:textStyle="bold"/>
+
                 <io.github.krtkush.lineartimer.LinearTimerView
                     android:id="@+id/linearTimer"
                     android:layout_width="55dp"
@@ -65,7 +56,17 @@
                     timer:initialColor="#fff"
                     timer:progressColor="@color/colorAccent"/>
             </FrameLayout>
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Eliminated"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:id="@+id/tv_eliminated"
+                android:visibility="gone"
+                android:textStyle="bold"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

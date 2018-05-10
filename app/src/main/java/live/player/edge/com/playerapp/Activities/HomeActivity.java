@@ -225,6 +225,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                      JSONObject obj_data = obj_response.getJSONObject("data");
                                      final String quizDate = obj_data.getString("quiz_launch_date");
                                      final String quizTime = obj_data.getString("quiz_prize");
+                                     String rank = obj_data.getString("rank");
+                                     String lives = obj_data.getString("lives");
                                      runOnUiThread(new Runnable() {
                                          @Override
                                          public void run() {
