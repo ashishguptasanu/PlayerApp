@@ -80,8 +80,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -89,7 +87,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Signed in successfolly, show authenticated UI.
                 GoogleSignInAccount acct = result.getSignInAccount();
                 sharedPreferences.edit().putString("display_name",acct.getDisplayName()).apply();
                 sharedPreferences.edit().putString("photo_url", acct.getPhotoUrl().toString()).apply();
@@ -105,11 +102,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                     postSignInData(acct.getId(), acct.getDisplayName(), acct.getEmail(), String.valueOf(acct.getPhotoUrl()));
                 startActivity(intent);
             }
-
-        }
+            }
     }
-
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d("Connection Result:", String.valueOf(connectionResult));
