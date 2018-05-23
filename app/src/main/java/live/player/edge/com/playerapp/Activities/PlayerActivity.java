@@ -58,10 +58,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class PlayerActivity extends AppCompatActivity implements LinearTimer.TimerListener, View.OnClickListener {
-    SurfaceView mVideoSurface;
-    TextView mPlayerStatusTextView;
-    BroadcastPlayer mBroadcastPlayer;
-    MediaController mMediaController = null;
     TextView tvLiveStatus;
     EditText edtComment;
     DatabaseReference mDatabase;
@@ -108,9 +104,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         //rtsp://93.115.28.144:1935/live/myStream
         //rtmp://rtmp.streamaxia.com/streamaxia/ef6a64c7cf098e0cTJfAWYfbiLQXPgyK14U3tcmTw9I3
         videoView.setVideoURI(Uri.parse("rtsp://93.115.28.144:1935/live/myStream"));
-        Log.d("Buffer", String.valueOf(videoView.getBufferPercentage()));
         videoView.start();
-
         videoView.requestFocus();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         recyclerViewComments = findViewById(R.id.recycler_comments);
@@ -159,11 +153,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         /*if(getIntent().getExtras() !=null && getIntent().getExtras().containsKey("resource_uri")){
             uri = getIntent().getStringExtra("resource_uri");
         }*/
-
-
-
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 Log.d("Prepared", "True");
@@ -174,7 +164,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         /*Timer timer = new Timer();
         TimerTask timerTask;
         timerTask = new TimerTask() {
-
             @Override
             public void run() {
                 animateCard();
@@ -188,22 +177,18 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     @Override
     protected void onPause() {
         super.onPause();
-
-    }
+        }
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-
         return false;
     }
     @Override
     protected void onResume() {
         super.onResume();
-
-    }
+        }
 
 
     private void getComments() {
-
         databaseReference.child("comments").child("1").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -243,9 +228,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     if (edtComment.getText().toString().length() > 0) {
                         sendCommentToFirebase(sharedPreferences.getString("display_name",""), edtComment.getText().toString());
-
-
-                    }
+                        }
                 }
                 return false;
             }
@@ -293,9 +276,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         btnOption2.setOnClickListener(this);
         btnOption3.setOnClickListener(this);
         tvTick.setText(String.valueOf(10 - (tickUpdateInMillis/1000)));
-        Log.d("Tick", String.valueOf(10 - (tickUpdateInMillis/1000)));
-    }
 
+    }
     @Override
     public void onTimerReset() {
         btnOption1.setBackground(getResources().getDrawable(R.drawable.buttonshape));
@@ -361,7 +343,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 Log.d("Status", String.valueOf(dataSnapshot) + dataSnapshot.getKey());
                 Status status = dataSnapshot.getValue(Status.class);
                 assert status != null;
-
                 Log.d("Status",status.question_status + " " + status.question_answer + " " + status.questionId);
                 if(initQuestionId < 2)
                 if(Objects.equals(status.question_status, "1")){

@@ -85,12 +85,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            Log.d("Results:", String.valueOf(result));
-            Log.d("Result", "handleSignInResult:" + result.isSuccess());
             if (result.isSuccess()) {
                 // Signed in successfolly, show authenticated UI.
                 GoogleSignInAccount acct = result.getSignInAccount();

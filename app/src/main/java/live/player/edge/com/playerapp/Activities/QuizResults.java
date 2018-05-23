@@ -37,7 +37,6 @@ public class QuizResults extends AppCompatActivity {
     GridLayoutManager gridLayoutManager;
     WinnerAdapter winnerAdapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,13 +71,12 @@ public class QuizResults extends AppCompatActivity {
                                      JSONObject obj_response = obj.getJSONObject("response");
                                      JSONObject obj_data = obj_response.getJSONObject("data");
                                      ammount = obj_data.getString("prize_per_winner");
-                                     //Log.d("QUIZID", String.valueOf(quizId));
-                                     JSONArray questionArray = obj_data.getJSONArray("winners");
+                                     JSONArray questionArray = obj_data.getJSONArray("winners_id");
                                      for (int i = 0; i < questionArray.length(); i++) {
                                          JSONObject questionObject = questionArray.getJSONObject(i);
-                                         String winnerId = questionObject.getString("winnerId");
-                                         String winnerName = questionObject.getString("winnerName");
-                                         String winnerImg = questionObject.getString("winnerImg");
+                                         String winnerId = questionObject.getString("user_id");
+                                         String winnerName = questionObject.getString("user_name");
+                                         String winnerImg = questionObject.getString("img_url");
                                          Winners winners = new Winners(winnerId, ammount, winnerImg, winnerName);
                                          winnersList.add(winners);
                                      }

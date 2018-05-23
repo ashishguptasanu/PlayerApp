@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -57,6 +59,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        initDatabase();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         tvQuizDate = findViewById(R.id.tv_quiz_date);
         tvQuizPrize = findViewById(R.id.tv_quiz_prize);
@@ -104,6 +107,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tvUserName.setText(userName);
         Picasso.with(getApplicationContext()).load(imageUrl).into(profileImage);
     }
+
+    private void initDatabase() {
+        /*SQLiteDatabase mydatabase = openOrCreateDatabase("your database name",MODE_PRIVATE,null);
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS TutorialsPoint(Username VARCHAR,Password VARCHAR);");
+        mydatabase.execSQL("INSERT INTO TutorialsPoint VALUES('admin','admin');");
+        Cursor resultSet = mydatabase.rawQuery("Select * from TutorialsPoint",null);
+        resultSet.moveToFirst();
+        String value = resultSet.getString(0);
+        String[] value2  = resultSet.getColumnNames();
+        Log.d("Result:", value + value2);*/
+    }
+
     private void showMenu(){
         PowerMenu powerMenu = new PowerMenu.Builder(getApplicationContext())
                 .addItem(new PowerMenuItem("Profile", false))
