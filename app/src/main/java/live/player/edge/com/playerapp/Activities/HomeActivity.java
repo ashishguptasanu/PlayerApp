@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -240,8 +238,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                      JSONObject obj_data = obj_response.getJSONObject("data");
                                      final String quizDate = obj_data.getString("quiz_launch_date");
                                      final String quizTime = obj_data.getString("quiz_prize");
-                                     String rank = obj_data.getString("rank");
-                                     String lives = obj_data.getString("lives");
+                                     /*String rank = obj_data.getString("rank");
+                                     String lives = obj_data.getString("lives");*/
                                      runOnUiThread(new Runnable() {
                                          @Override
                                          public void run() {
