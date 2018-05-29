@@ -49,9 +49,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     ImageView profileImage, imageMenus;
     TextView tvUserName, tvQuizDate, tvQuizPrize;
     Button btnWatchLive;
+    String imageUrl;
     SharedPreferences sharedPreferences;
     private DatabaseReference mDatabase;
     OkHttpClient client = new OkHttpClient();
+    String userName;
     private static String HOME_API = "/home_api.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +102,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         imageMenus = findViewById(R.id.image_menus);
         imageMenus.setOnClickListener(this);
         btnWatchLive.setOnClickListener(this);
-        String userName = sharedPreferences.getString("display_name","");
-        String imageUrl = sharedPreferences.getString("photo_url","");
+        userName = sharedPreferences.getString("display_name","");
+        imageUrl = sharedPreferences.getString("photo_url","");
         tvUserName.setText(userName);
         Picasso.with(getApplicationContext()).load(imageUrl).into(profileImage);
     }
@@ -132,6 +134,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .setSelectedEffect(true)
                 .setSelectedMenuColor(getApplicationContext().getResources().getColor(R.color.colorPrimary))
                 .setOnMenuItemClickListener(onMenuItemClickListener)
+
                 .build();
         powerMenu.showAsDropDown(imageMenus);
     }
@@ -211,6 +214,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         startActivity(intent);
                     }
                 });
+            }else if(Objects.equals(String.valueOf(position),"0")){
+                Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                profileIntent.putExtra("image_url", imageUrl);
+                profileIntent.putExtra("user_name", userName);
+                startActivity(profileIntent);
             }
         }
     };

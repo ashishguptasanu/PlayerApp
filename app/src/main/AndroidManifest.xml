@@ -20,13 +20,17 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activities.PlayerActivity"
             android:theme="@style/AppTheme.custom"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".Activities.HomeActivity"></activity>
-        <activity android:name=".Activities.GettingStarted">
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.HomeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.GettingStarted"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,11 +40,20 @@
         <activity
             android:name=".Activities.SignInActivity"
             android:label="Log In or Sign Up "
+            android:screenOrientation="portrait"
             android:parentActivityName=".Activities.GettingStarted" />
-        <activity android:name=".Activities.VideoActivity"></activity>
-        <activity android:name=".Activities.QuizResults"
+        <activity android:name=".Activities.VideoActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activities.QuizResults"
+            android:screenOrientation="portrait"
+            android:label="Winners"
+            android:parentActivityName=".Activities.HomeActivity" />
+        <activity android:name=".Activities.ProfileActivity"
+            android:label="Profile"
             android:parentActivityName=".Activities.HomeActivity"
-            android:label="Winners"></activity>
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
