@@ -23,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
         userName = getIntent().getStringExtra("user_name");
         edtUserName = findViewById(R.id.edt_user_name);
         edtUserName.setText(userName);
-        Log.d("UserName:",userName);
+         Log.d("UserName:",userName);
         Picasso.with(getApplicationContext()).load(getIntent().getStringExtra("image_url")).into(imgProfileImage);
     }
 }

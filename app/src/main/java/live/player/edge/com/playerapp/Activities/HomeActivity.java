@@ -222,6 +222,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
+
     private void getUserDetails() {
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)

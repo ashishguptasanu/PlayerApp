@@ -82,7 +82,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     LinearTimerView linearTimerView;
     SharedPreferences sharedPreferences;
     int selectedQuestionId, quizId, initQuestionId=0;
-
+    int updated, userLeft;
+    int onCreateStatus=0, onPauseStatus=0, onResumeStatus=0, onStopStatus=0;
     @SuppressLint({"ResourceType", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,25 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         }
         setContentView(R.layout.activity_player);
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        getQuiz();
+
+        databaseReference.child("live_user").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(onCreateStatus == 0){
+                    int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                    live_users = live_users + 1;
+                    databaseReference.child("live_user").setValue(live_users);
+                    onCreateStatus = 1;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+                getQuiz();
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         videoView = this.findViewById(R.id.video_view);
@@ -153,14 +172,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         /*if(getIntent().getExtras() !=null && getIntent().getExtras().containsKey("resource_uri")){
             uri = getIntent().getStringExtra("resource_uri");
         }*/
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                Log.d("Prepared", "True");
-
-
-            }
-        });
         /*Timer timer = new Timer();
         TimerTask timerTask;
         timerTask = new TimerTask() {
@@ -177,6 +188,26 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     @Override
     protected void onPause() {
         super.onPause();
+        databaseReference.child("live_user").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(onPauseStatus == 0){
+
+                        Log.d("live user:", dataSnapshot.getValue().toString());
+                        int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                        live_users = live_users - 1;
+                        databaseReference.child("live_user").setValue(live_users);
+                        onPauseStatus = 1;
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         }
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -185,6 +216,25 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     @Override
     protected void onResume() {
         super.onResume();
+        databaseReference.child("live_user").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(onResumeStatus == 0){
+                        Log.d("live user:", dataSnapshot.getValue().toString());
+                        int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                        live_users = live_users + 1;
+                        databaseReference.child("live_user").setValue(live_users);
+                        onResumeStatus = 1;
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         }
 
 
@@ -340,10 +390,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d("Status", String.valueOf(dataSnapshot) + dataSnapshot.getKey());
                 Status status = dataSnapshot.getValue(Status.class);
                 assert status != null;
-                Log.d("Status",status.question_status + " " + status.question_answer + " " + status.questionId);
                 if(initQuestionId < 2)
                 if(Objects.equals(status.question_status, "1")){
                     selectedQuestionId = Integer.parseInt(status.questionId);
@@ -368,7 +416,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                     btnOption3.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption3());
                     linearTimerView.setVisibility(View.GONE);
                     tvTick.setVisibility(View.GONE);
-                    //Log.d("Selected Answer", String.valueOf(selectedOptionId));
                     if(isElemenated){
                         imageAnswerStatus.setVisibility(View.GONE);
                         tvEliminated.setVisibility(View.VISIBLE);
@@ -526,5 +573,31 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                      }
         );
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        databaseReference.child("live_user").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(onStopStatus == 1){
+
+                        Log.d("live user:", dataSnapshot.getValue().toString());
+                        int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                        live_users = live_users - 1;
+                        databaseReference.child("live_user").setValue(live_users);
+                        onStopStatus = 1;
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }
 
