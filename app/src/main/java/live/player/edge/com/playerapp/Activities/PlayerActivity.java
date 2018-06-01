@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -19,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,11 +25,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-import com.bambuser.broadcaster.BroadcastPlayer;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -67,7 +63,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     List<Comments> commentsList = new ArrayList<>();
     VideoView videoView;
     CardView cardQuestion;
-    TextView tvQuestion, tvTick, tvEliminated;
+    TextView tvQuestion, tvTick, tvEliminated, tvPlayerCount;
     ImageView imageAnswerStatus;
     Button btnOption1, btnOption2, btnOption3;
     LinearTimer linearTimer;
@@ -95,8 +91,20 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         setContentView(R.layout.activity_player);
+        tvPlayerCount = findViewById(R.id.tv_player_count);
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("live_user").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                    tvPlayerCount.setText(String.valueOf(live_users));
+                    }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         databaseReference.child("live_user").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -181,7 +189,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
             }
         };
         timer.schedule(timerTask, 0, 10000);*/
-        animateLiveStatus();
+        //animateLiveStatus();
         getComments();
         initializeComments();
     }
@@ -537,7 +545,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 break;
         }
     }
-
     private void sendSelectedAnswer(String optionId) {
         selectedOptionId = optionId;
         RequestBody requestBody = new MultipartBody.Builder()
@@ -587,9 +594,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                         live_users = live_users - 1;
                         databaseReference.child("live_user").setValue(live_users);
                         onStopStatus = 1;
-
-                }
-
+                        }
             }
 
             @Override

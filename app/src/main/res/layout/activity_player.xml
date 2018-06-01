@@ -138,6 +138,24 @@
             android:layout_gravity="bottom"
             android:layout_margin="10dp"
             android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_visibility_black_24dp"/>
+            <TextView
+                android:id="@+id/tv_player_count"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
         <TextView
             android:id="@+id/tv_live_status"
             android:layout_width="wrap_content"
@@ -149,6 +167,7 @@
             android:layout_gravity="right"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
+            android:visibility="gone"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
             android:textStyle="bold"
