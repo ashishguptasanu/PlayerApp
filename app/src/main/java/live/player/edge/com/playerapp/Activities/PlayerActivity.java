@@ -378,7 +378,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                                          String option3 = questionObject.getString("QuestionOptionC");
                                          Questions question = new Questions(Integer.parseInt(questionId), questionQuiz, option1, option2, option3);
                                          questions.add(question);}
-                                         //Log.d("Size List", String.valueOf(questions.size()));
                                      postQuestions(questions);
                                  } catch (JSONException e) {
                                      e.printStackTrace();

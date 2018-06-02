@@ -16,7 +16,7 @@
         app:cardCornerRadius="20dp"
         android:id="@+id/card_question"
         android:visibility="visible"
-        android:alpha="0"
+        android:alpha="1"
         android:layout_gravity="center">
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,6 +76,28 @@
                 android:textColor="#fff"
                 android:textStyle="bold"
                 android:id="@+id/tv_question"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_border"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_margin="3dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/fill_colour"
+                    android:layout_weight="1">
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                </LinearLayout>
+            </LinearLayout>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
