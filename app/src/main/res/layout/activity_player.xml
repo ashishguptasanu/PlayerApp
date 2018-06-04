@@ -76,27 +76,140 @@
                 android:textColor="#fff"
                 android:textStyle="bold"
                 android:id="@+id/tv_question"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_border"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_margin="3dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/fill_colour"
-                    android:layout_weight="1">
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_border"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_margin="3dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@drawable/fill_colour"
+                            android:layout_weight="1">
 
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
 
-                </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Rajiv Gandhi"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:textSize="19sp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="10000"
+                        android:gravity="right|center_vertical"
+                        android:textStyle="bold"
+                        android:textColor="#bdbdbd"
+                        android:layout_marginRight="10dp"/>
+                </FrameLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_border"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_margin="3dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@drawable/fill_colour"
+                            android:layout_weight=".7">
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight=".3">
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Jawaharlal Nehru"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:textSize="19sp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="15000"
+                        android:gravity="right|center_vertical"
+                        android:textStyle="bold"
+                        android:textColor="#bdbdbd"
+                        android:layout_marginRight="10dp"/>
+                </FrameLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_border"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_margin="3dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@drawable/fill_colour"
+                            android:layout_weight=".3">
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight=".7">
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Rajendra Prasad"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:textSize="19sp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="4000"
+                        android:gravity="right|center_vertical"
+                        android:textStyle="bold"
+                        android:textColor="#bdbdbd"
+                        android:layout_marginRight="10dp"/>
+                </FrameLayout>
             </LinearLayout>
             <Button
                 android:layout_width="match_parent"
@@ -104,6 +217,7 @@
                 android:text="Rajiv Gandhi"
                 android:background="@drawable/buttonshape"
                 android:textColor="#fff"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:textAllCaps="false"
                 android:textSize="19dp"
@@ -115,6 +229,7 @@
                 android:text="Jawahar Lal Nehru"
                 android:background="@drawable/buttonshape"
                 android:textColor="#fff"
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:textSize="19dp"
@@ -126,6 +241,7 @@
                 android:text="Rajendra Prasad"
                 android:background="@drawable/buttonshape"
                 android:textColor="#fff"
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:textSize="19dp"
