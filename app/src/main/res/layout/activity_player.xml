@@ -33,7 +33,6 @@
                     android:text="2"
                     android:layout_gravity="center"
                     android:textSize="40sp"
-
                     android:layout_marginBottom="20dp"
                     android:textStyle="bold"
                     android:id="@+id/tv_tick"
@@ -95,7 +94,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:background="@drawable/fill_colour"
+                            android:background="@drawable/button_half_rounded"
                             android:layout_weight="1">
 
                         </LinearLayout>
@@ -119,6 +118,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="10000"
+                        android:textSize="12sp"
                         android:gravity="right|center_vertical"
                         android:textStyle="bold"
                         android:textColor="#bdbdbd"
@@ -126,7 +126,7 @@
                 </FrameLayout>
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:layout_height="wrap_content">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -138,7 +138,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:background="@drawable/fill_colour"
+                            android:background="@drawable/button_half_rounded"
                             android:layout_weight=".7">
 
                         </LinearLayout>
@@ -162,6 +162,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="15000"
+                        android:textSize="12sp"
                         android:gravity="right|center_vertical"
                         android:textStyle="bold"
                         android:textColor="#bdbdbd"
@@ -169,7 +170,7 @@
                 </FrameLayout>
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:layout_height="wrap_content">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -181,16 +182,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:background="@drawable/fill_colour"
+                            android:background="@drawable/button_half_rounded"
                             android:layout_weight=".3">
-
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_weight=".7">
-
                         </LinearLayout>
                     </LinearLayout>
                     <TextView
@@ -205,6 +204,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="4000"
+                        android:textSize="12sp"
                         android:gravity="right|center_vertical"
                         android:textStyle="bold"
                         android:textColor="#bdbdbd"
