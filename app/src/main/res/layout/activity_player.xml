@@ -139,14 +139,12 @@
                             android:orientation="vertical"
                             android:background="@drawable/button_half_rounded"
                             android:layout_weight=".7">
-
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_weight=".3">
-
                         </LinearLayout>
                     </LinearLayout>
                     <TextView

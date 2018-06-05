@@ -78,7 +78,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     LinearTimerView linearTimerView;
     SharedPreferences sharedPreferences;
     int selectedQuestionId, quizId, initQuestionId=0;
-    int updated, userLeft;
     int onCreateStatus=0, onPauseStatus=0, onResumeStatus=0, onStopStatus=0;
     @SuppressLint({"ResourceType", "SetTextI18n"})
     @Override
@@ -114,10 +113,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                     databaseReference.child("live_user").setValue(live_users);
                     onCreateStatus = 1;
                 }
-
-            }
-
-            @Override
+                }
+                @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
