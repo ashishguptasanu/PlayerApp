@@ -43,7 +43,6 @@
                     android:layout_gravity="center"
                     android:visibility="gone"
                     android:id="@+id/image_answer_status"/>
-
                 <io.github.krtkush.lineartimer.LinearTimerView
                     android:id="@+id/linearTimer"
                     android:layout_width="55dp"
