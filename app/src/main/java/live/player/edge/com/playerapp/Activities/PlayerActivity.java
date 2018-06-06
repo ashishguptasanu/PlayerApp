@@ -112,7 +112,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                     live_users = live_users + 1;
                     databaseReference.child("live_user").setValue(live_users);
                     onCreateStatus = 1;
-                }
+                    }
                 }
                 @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -203,9 +203,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                         live_users = live_users - 1;
                         databaseReference.child("live_user").setValue(live_users);
                         onPauseStatus = 1;
-
                 }
-
             }
 
             @Override
