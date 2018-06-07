@@ -134,7 +134,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .setSelectedEffect(true)
                 .setSelectedMenuColor(getApplicationContext().getResources().getColor(R.color.colorPrimary))
                 .setOnMenuItemClickListener(onMenuItemClickListener)
-
                 .build();
         powerMenu.showAsDropDown(imageMenus);
     }
