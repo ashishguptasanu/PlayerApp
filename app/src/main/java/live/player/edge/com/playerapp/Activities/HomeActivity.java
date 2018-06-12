@@ -137,6 +137,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
         powerMenu.showAsDropDown(imageMenus);
     }
+
     void getLatestResourceUri() {
         Request request = new Request.Builder()
                 .url("https://api.irisplatform.io/broadcasts")
