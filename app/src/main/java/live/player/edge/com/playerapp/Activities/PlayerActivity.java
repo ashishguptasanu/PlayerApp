@@ -73,7 +73,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     boolean isOptionSelected = false, isElemenated = false;
     private static String QUIZ_URL = "/available_quiz.php";
     private static String POST_ANSWER_URL = "/leader_board.php";
-    private static final String APPLICATION_ID = "CaeKICW1agdVn9C1KIOWsw";
+    //private static final String APPLICATION_ID = "CaeKICW1agdVn9C1KIOWsw";
     String selectedOptionId = " ";
     LinearTimerView linearTimerView;
     SharedPreferences sharedPreferences;
@@ -95,13 +95,12 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         databaseReference.child("live_user").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
-                    tvPlayerCount.setText(String.valueOf(live_users));
-                    }
+                int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                tvPlayerCount.setText(String.valueOf(live_users));
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
         databaseReference.child("live_user").addValueEventListener(new ValueEventListener() {
@@ -112,14 +111,14 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                     live_users = live_users + 1;
                     databaseReference.child("live_user").setValue(live_users);
                     onCreateStatus = 1;
-                    }
                 }
-                @Override
+            }
+            @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-                getQuiz();
+        getQuiz();
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         videoView = this.findViewById(R.id.video_view);
@@ -198,11 +197,11 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(onPauseStatus == 0){
 
-                        Log.d("live user:", dataSnapshot.getValue().toString());
-                        int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
-                        live_users = live_users - 1;
-                        databaseReference.child("live_user").setValue(live_users);
-                        onPauseStatus = 1;
+                    Log.d("live user:", dataSnapshot.getValue().toString());
+                    int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                    live_users = live_users - 1;
+                    databaseReference.child("live_user").setValue(live_users);
+                    onPauseStatus = 1;
                 }
             }
 
@@ -211,7 +210,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
 
             }
         });
-        }
+    }
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return false;
@@ -223,21 +222,18 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(onResumeStatus == 0){
-                        Log.d("live user:", dataSnapshot.getValue().toString());
-                        int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
-                        live_users = live_users + 1;
-                        databaseReference.child("live_user").setValue(live_users);
-                        onResumeStatus = 1;
+                    int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                    live_users = live_users + 1;
+                    databaseReference.child("live_user").setValue(live_users);
+                    onResumeStatus = 1;
                 }
-                }
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                }
+            }
         });
-        }
-
-
+    }
     private void getComments() {
         databaseReference.child("comments").child("1").addChildEventListener(new ChildEventListener() {
             @Override
@@ -278,7 +274,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     if (edtComment.getText().toString().length() > 0) {
                         sendCommentToFirebase(sharedPreferences.getString("display_name",""), edtComment.getText().toString());
-                        }
+                    }
                 }
                 return false;
             }
@@ -291,7 +287,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         newRef.setValue(comments);
         edtComment.setText("");
         edtComment.setHint("Enter your Comment..");
-
     }
 
     private void animateLiveStatus() {
@@ -326,8 +321,8 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         btnOption2.setOnClickListener(this);
         btnOption3.setOnClickListener(this);
         tvTick.setText(String.valueOf(10 - (tickUpdateInMillis/1000)));
-
     }
+
     @Override
     public void onTimerReset() {
         btnOption1.setBackground(getResources().getDrawable(R.drawable.buttonshape));
@@ -349,8 +344,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                          @Override
                          public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                              String resp = response.body().string();
-                             //Log.d("resp",resp);
-
                              if (response.isSuccessful()) {
                                  JSONObject obj = null;
                                  try {
@@ -359,7 +352,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                                      JSONObject obj_data=obj_response.getJSONObject("data");
                                      quizId = obj_data.getInt("QuizId");
                                      sharedPreferences.edit().putString("quiz_id", String.valueOf(quizId)).apply();
-                                     //Log.d("QUIZID", String.valueOf(quizId));
                                      JSONArray questionArray = obj_data.getJSONArray("QuizQuestions");
                                      for(int i=0; i<questionArray.length(); i++){
                                          JSONObject questionObject = questionArray.getJSONObject(i);
@@ -392,96 +384,95 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 Status status = dataSnapshot.getValue(Status.class);
                 assert status != null;
                 if(initQuestionId < 2)
-                if(Objects.equals(status.question_status, "1")){
-                    selectedQuestionId = Integer.parseInt(status.questionId);
-                    //Log.d("Changed", "Question Status");
-                    linearTimerView.setVisibility(View.VISIBLE);
-                    tvTick.setVisibility(View.VISIBLE);
-                    tvTick.setVisibility(View.VISIBLE);
-                    tvQuestion.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getQuestion());
-                    btnOption1.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption1());
-                    btnOption2.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption2());
-                    btnOption3.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption3());
-                    linearTimer.startTimer();
-                    animateCard(0, 1, 1000);
-                }
-                else if(Objects.equals(status.question_status, "2")){
-                    btnOption1.setOnClickListener(null);
-                    btnOption2.setOnClickListener(null);
-                    btnOption3.setOnClickListener(null);
-                    tvQuestion.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getQuestion());
-                    btnOption1.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption1());
-                    btnOption2.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption2());
-                    btnOption3.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption3());
-                    linearTimerView.setVisibility(View.GONE);
-                    tvTick.setVisibility(View.GONE);
-                    if(isElemenated){
-                        imageAnswerStatus.setVisibility(View.GONE);
-                        tvEliminated.setVisibility(View.VISIBLE);
-                        if(Objects.equals(status.question_answer, "2")){
-                            btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                        }else if(Objects.equals(status.question_answer, "3")){
-                            btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                        }else if(Objects.equals(status.question_answer, "1")){
-                            btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                        }
+                    if(Objects.equals(status.question_status, "1")){
+                        selectedQuestionId = Integer.parseInt(status.questionId);
+                        linearTimerView.setVisibility(View.VISIBLE);
+                        tvTick.setVisibility(View.VISIBLE);
+                        tvTick.setVisibility(View.VISIBLE);
+                        tvQuestion.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getQuestion());
+                        btnOption1.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption1());
+                        btnOption2.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption2());
+                        btnOption3.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption3());
+                        linearTimer.startTimer();
+                        animateCard(0, 1, 1000);
                     }
-                    if(Objects.equals(status.question_answer, selectedOptionId)){
-                        imageAnswerStatus.setBackgroundResource(R.mipmap.true_symbol);
-                        if(Objects.equals(selectedOptionId, "1")){
-                            btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                        }else if(Objects.equals(selectedOptionId, "2")){
-                            btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                        }else if(Objects.equals(selectedOptionId, "3")){
-                            btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                        }
-
-                    }else{
-                        isElemenated = true;
-                        tvEliminated.setVisibility(View.VISIBLE);
-                        if(Objects.equals(selectedOptionId, "1")){
-                            imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
-                            btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                    else if(Objects.equals(status.question_status, "2")){
+                        btnOption1.setOnClickListener(null);
+                        btnOption2.setOnClickListener(null);
+                        btnOption3.setOnClickListener(null);
+                        tvQuestion.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getQuestion());
+                        btnOption1.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption1());
+                        btnOption2.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption2());
+                        btnOption3.setText(questions.get(Integer.parseInt(dataSnapshot.getKey()) - 1).getOption3());
+                        linearTimerView.setVisibility(View.GONE);
+                        tvTick.setVisibility(View.GONE);
+                        if(isElemenated){
+                            imageAnswerStatus.setVisibility(View.GONE);
+                            tvEliminated.setVisibility(View.VISIBLE);
                             if(Objects.equals(status.question_answer, "2")){
                                 btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
                             }else if(Objects.equals(status.question_answer, "3")){
                                 btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                            }
-                        }else if(Objects.equals(selectedOptionId, "2")){
-                            imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
-                            btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_false));
-                            if(Objects.equals(status.question_answer, "1")){
+                            }else if(Objects.equals(status.question_answer, "1")){
                                 btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                            }else if(Objects.equals(status.question_answer, "3")){
+                            }
+                        }
+                        if(Objects.equals(status.question_answer, selectedOptionId)){
+                            imageAnswerStatus.setBackgroundResource(R.mipmap.true_symbol);
+                            if(Objects.equals(selectedOptionId, "1")){
+                                btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                            }else if(Objects.equals(selectedOptionId, "2")){
+                                btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                            }else if(Objects.equals(selectedOptionId, "3")){
                                 btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
                             }
-                        }else if(Objects.equals(selectedOptionId, "3")){
-                            imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
-                            btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_false));
-                            if(Objects.equals(status.question_answer, "1")){
-                                btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
-                            }else if(Objects.equals(status.question_answer, "2")){
-                                btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
+
+                        }else{
+                            isElemenated = true;
+                            tvEliminated.setVisibility(View.VISIBLE);
+                            if(Objects.equals(selectedOptionId, "1")){
+                                imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
+                                btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                                if(Objects.equals(status.question_answer, "2")){
+                                    btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                                }else if(Objects.equals(status.question_answer, "3")){
+                                    btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                                }
+                            }else if(Objects.equals(selectedOptionId, "2")){
+                                imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
+                                btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                                if(Objects.equals(status.question_answer, "1")){
+                                    btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                                }else if(Objects.equals(status.question_answer, "3")){
+                                    btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                                }
+                            }else if(Objects.equals(selectedOptionId, "3")){
+                                imageAnswerStatus.setBackgroundResource(R.mipmap.false_symbol);
+                                btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_false));
+                                if(Objects.equals(status.question_answer, "1")){
+                                    btnOption1.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                                }else if(Objects.equals(status.question_answer, "2")){
+                                    btnOption2.setBackground(getResources().getDrawable(R.drawable.answer_true));
+                                }
                             }
                         }
+                        imageAnswerStatus.setVisibility(View.VISIBLE);
+                        animateCard(0, 1, 1000);
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                animateCard(1,0, 100);
+                                btnOption1.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+                                btnOption2.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+                                btnOption3.setBackground(getResources().getDrawable(R.drawable.buttonshape));
+                                isOptionSelected = false;
+                                selectedOptionId = " ";
+                                imageAnswerStatus.setVisibility(View.GONE);
+                                tvEliminated.setVisibility(View.GONE);
+                            }
+                        }, 5000);
                     }
-                    imageAnswerStatus.setVisibility(View.VISIBLE);
-                    animateCard(0, 1, 1000);
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            animateCard(1,0, 100);
-                            btnOption1.setBackground(getResources().getDrawable(R.drawable.buttonshape));
-                            btnOption2.setBackground(getResources().getDrawable(R.drawable.buttonshape));
-                            btnOption3.setBackground(getResources().getDrawable(R.drawable.buttonshape));
-                            isOptionSelected = false;
-                            selectedOptionId = " ";
-                            imageAnswerStatus.setVisibility(View.GONE);
-                            tvEliminated.setVisibility(View.GONE);
-                        }
-                    }, 5000);
-                }
             }
 
             @Override
@@ -508,7 +499,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                         isOptionSelected = true;
                         sendSelectedAnswer("1");
                     }}
-                    else{
+                else{
                     tvEliminated.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -557,17 +548,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                          public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                              String resp = response.body().string();
                              Log.d("resp",resp);
-                            /* if (response.isSuccessful()) {
-                                 JSONObject obj = null;
-                                 try {
-                                     obj = new JSONObject(resp);
-                                     JSONObject obj_response=obj.getJSONObject("Response");
-                                     JSONObject obj_data=obj_response.getJSONObject("data");
 
-                                 } catch (JSONException e) {
-                                     e.printStackTrace();
-                                 }
-                             }*/
                          }
                      }
         );
@@ -580,13 +561,12 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(onStopStatus == 1){
-
-                        Log.d("live user:", dataSnapshot.getValue().toString());
-                        int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
-                        live_users = live_users - 1;
-                        databaseReference.child("live_user").setValue(live_users);
-                        onStopStatus = 1;
-                        }
+                    Log.d("live user:", dataSnapshot.getValue().toString());
+                    int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
+                    live_users = live_users - 1;
+                    databaseReference.child("live_user").setValue(live_users);
+                    onStopStatus = 1;
+                }
             }
 
             @Override

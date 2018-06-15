@@ -59,6 +59,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
         initDatabase();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         tvQuizDate = findViewById(R.id.tv_quiz_date);
