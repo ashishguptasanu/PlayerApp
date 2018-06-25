@@ -25,6 +25,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -70,6 +71,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     OkHttpClient client = new OkHttpClient();
     List<Questions> questions = new ArrayList<>();
     DatabaseReference databaseReference;
+    LinearLayout layoutOption2, layoutOption2Half;
     boolean isOptionSelected = false, isElemenated = false;
     private static String QUIZ_URL = "/available_quiz.php";
     private static String POST_ANSWER_URL = "/leader_board.php";
@@ -186,6 +188,20 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         };
         timer.schedule(timerTask, 0, 10000);*/
         //animateLiveStatus();
+        layoutOption2 = findViewById(R.id.layout_option2);
+        layoutOption2Half = findViewById(R.id.layout_option2_half);
+        LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                0.2f
+        );
+        layoutOption2Half.setLayoutParams(param2);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                0.2f
+        );
+        layoutOption2.setLayoutParams(param);
         getComments();
         initializeComments();
     }
@@ -196,8 +212,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(onPauseStatus == 0){
-
-                    Log.d("live user:", dataSnapshot.getValue().toString());
                     int live_users = Integer.parseInt(dataSnapshot.getValue().toString());
                     live_users = live_users - 1;
                     databaseReference.child("live_user").setValue(live_users);

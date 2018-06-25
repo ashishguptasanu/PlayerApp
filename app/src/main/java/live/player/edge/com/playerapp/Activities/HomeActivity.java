@@ -59,9 +59,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
-        initDatabase();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         tvQuizDate = findViewById(R.id.tv_quiz_date);
         tvQuizPrize = findViewById(R.id.tv_quiz_prize);
@@ -110,17 +107,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Picasso.with(getApplicationContext()).load(imageUrl).into(profileImage);
     }
 
-    private void initDatabase() {
-        /*SQLiteDatabase mydatabase = openOrCreateDatabase("your database name",MODE_PRIVATE,null);
-        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS TutorialsPoint(Username VARCHAR,Password VARCHAR);");
-        mydatabase.execSQL("INSERT INTO TutorialsPoint VALUES('admin','admin');");
-        Cursor resultSet = mydatabase.rawQuery("Select * from TutorialsPoint",null);
-        resultSet.moveToFirst();
-        String value = resultSet.getString(0);
-        String[] value2  = resultSet.getColumnNames();
-        Log.d("Result:", value + value2);*/
-    }
-
     private void showMenu(){
         PowerMenu powerMenu = new PowerMenu.Builder(getApplicationContext())
                 .addItem(new PowerMenuItem("Profile", false))
@@ -140,7 +126,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         powerMenu.showAsDropDown(imageMenus);
     }
 
-    void getLatestResourceUri() {
+    /*void getLatestResourceUri() {
         Request request = new Request.Builder()
                 .url("https://api.irisplatform.io/broadcasts")
                 .addHeader("Accept", "application/vnd.bambuser.v1+json")
@@ -171,7 +157,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (Exception ignored) {}
             }
         });
-    }
+    }*/
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -195,7 +182,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-    private  OnMenuItemClickListener<PowerMenuItem> onMenuItemClickListener = new OnMenuItemClickListener<PowerMenuItem>() {
+    private OnMenuItemClickListener<PowerMenuItem> onMenuItemClickListener = new OnMenuItemClickListener<PowerMenuItem>() {
         @Override
         public void onItemClick(int position, PowerMenuItem item) {
             if (Objects.equals(String.valueOf(position), "3")) {
@@ -246,7 +233,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                          @Override
                          public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                              String resp = response.body().string();
-                             Log.d("resp", resp);
                              if (response.isSuccessful()) {
                                  JSONObject obj = null;
                                  try {
