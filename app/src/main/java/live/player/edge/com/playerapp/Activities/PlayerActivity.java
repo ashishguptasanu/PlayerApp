@@ -195,12 +195,14 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.2f
         );
+        param2.setMargins(3,3,3,3);
         layoutOption2Half.setLayoutParams(param2);
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 0.2f
         );
+        param.setMargins(6,6,3,3);
         layoutOption2.setLayoutParams(param);
         getComments();
         initializeComments();
@@ -218,7 +220,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                     onPauseStatus = 1;
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -542,6 +543,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                 break;
         }
     }
+
     private void sendSelectedAnswer(String optionId) {
         selectedOptionId = optionId;
         RequestBody requestBody = new MultipartBody.Builder()
