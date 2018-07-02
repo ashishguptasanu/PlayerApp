@@ -320,7 +320,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         });
     }
 
-
     @Override
     public void animationComplete() {
         animateCard(1, 0, 100);
