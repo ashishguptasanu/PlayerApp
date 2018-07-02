@@ -75,7 +75,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
     boolean isOptionSelected = false, isElemenated = false;
     private static String QUIZ_URL = "/available_quiz.php";
     private static String POST_ANSWER_URL = "/leader_board.php";
-    //private static final String APPLICATION_ID = "CaeKICW1agdVn9C1KIOWsw";
     String selectedOptionId = " ";
     LinearTimerView linearTimerView;
     SharedPreferences sharedPreferences;
@@ -295,7 +294,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
             }
         });
     }
-
     private void sendCommentToFirebase(String username, String comment) {
         Comments comments = new Comments(username, comment);
         DatabaseReference newRef =  mDatabase.child("comments").child("1").push();
@@ -303,7 +301,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         edtComment.setText("");
         edtComment.setHint("Enter your Comment..");
     }
-
     private void animateLiveStatus() {
         tvLiveStatus.setVisibility(View.VISIBLE);
         ObjectAnimator scaleAnim = ObjectAnimator.ofFloat(tvLiveStatus, View.ALPHA, 1, 0);
@@ -391,7 +388,6 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
         databaseReference.child("quiz").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("Snapshot", String.valueOf(dataSnapshot) + s);
             }
 
             @Override
@@ -441,8 +437,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                             }else if(Objects.equals(selectedOptionId, "3")){
                                 btnOption3.setBackground(getResources().getDrawable(R.drawable.answer_true));
                             }
-
-                        }else{
+                            }else{
                             isElemenated = true;
                             tvEliminated.setVisibility(View.VISIBLE);
                             if(Objects.equals(selectedOptionId, "1")){
@@ -564,8 +559,7 @@ public class PlayerActivity extends AppCompatActivity implements LinearTimer.Tim
                          public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                              String resp = response.body().string();
                              Log.d("resp",resp);
-
-                         }
+                             }
                      }
         );
     }
